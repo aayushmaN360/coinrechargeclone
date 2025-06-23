@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Coin Recharge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .app-logo {
+            height: 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #161823;
+            flex-grow: 1;
+        }
+
+        .login-btn {
+            color: #fe2c55;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .username-section {
+            margin-bottom: 20px;
+        }
+
+        .username-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .promo-text {
+            color: #fe2c55;
+            margin: 15px 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .coins-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .coin-card {
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 18px;
+            border: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .coin-card.selected {
+            border-color: #fe2c55;
+            background: #fff5f7;
+        }
+
+        .coin-amount {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #161823;
+            margin-bottom: 8px;
+        }
+
+        .coin-price {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .coin-symbol {
+            font-size: 16px;
+            color: #ffd700;
+        }
+
+        .dollar-symbol {
+            color: #00c853;
+        }
+
+        .custom-section {
+            grid-column: span 3;
+            background: #f8f8f8;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding: 18px;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+
+        .total-label {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .total-amount {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #161823;
+        }
+
+        .recharge-btn {
+            width: 100%;
+            background: #fe2c55;
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .recharge-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            text-align: center;
+            max-width: 450px;
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 {
+            color: #fe2c55;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .modal p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="images.png" class="app-logo" alt="app Logo">
+            <h1>Get Coins</h1>
+            <a href="#" class="login-btn">Log in</a>
+        </div>
+
+        <div class="username-section">
+            <input type="text" class="username-input" placeholder="Enter  Username" id="username">
+        </div>
+
+        <p class="promo-text">Recharge & save around 25% with a lower third-party service fee.</p>
+
+        <div class="coins-grid">
+            <div class="coin-card" data-coin="30" data-price="0.31">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">30</div>
+                <div class="coin-price"><span class="dollar-symbol">$</span>0.31</div>
+            </div>
+            <div class="coin-card" data-coin="3500" data-price="36.20">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">3,500</div>
+                <div class="coin-price"><span class="dollar-symbol">$</span>36.20</div>
+            </div>
+            <div class="coin-card" data-coin="350" data-price="3.65">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">350</div>
+                <div class="coin-price"><span class="dollar-symbol">$</span>3.65</div>
+            </div>
+            <div class="coin-card" data-coin="700" data-price="7.25">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">700</div>
+                <div class="coin-price"><span class="dollar-symbol">$</span>7.25</div>
+            </div>
+            <div class="coin-card" data-coin="7000" data-price="72.39">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">7,000</div>
+                <div class="coin-price"><span class="dollar-symbol">$</span>72.39</div>
+            </div>
+            <div class="coin-card" data-coin="17500" data-price="180.99">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">17,500</div>
+                <div class="coin-price"><span class="dollar-symbol">$</span>180.99</div>
+            </div>
+            <div class="coin-card custom-section" id="customCard">
+                <div class="coin-amount"><img src="coin.png" alt="Coins" style="width:18px; height:18px;">Custom</div>
+                <input type="number" class="custom-input" id="customInput" placeholder="Enter Coins amount">
+                <div class="coin-price"><span class="dollar-symbol">$</span>Large amount supported</div>
+            </div>
+        </div>
+
+        <div class="total-section">
+            <span class="total-label">Total Amount:</span>
+            <div class="total-amount">
+                <span class="dollar-symbol">$</span><span id="totalAmount">0.00</span>
+            </div>
+        </div>
+
+        <button class="recharge-btn" id="rechargeBtn" disabled>Recharge Now</button>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <h2>🎉 Recharge Successful!</h2>
+            <p id="confirmationText"></p>
+            <p>Please wait 1 hour for coins to be credited to your account</p>
+            <button class="recharge-btn" style="margin-top: 25px; width: auto;" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const username = document.getElementById('username');
+        const customInput = document.getElementById('customInput');
+        const rechargeBtn = document.getElementById('rechargeBtn');
+        const totalAmount = document.getElementById('totalAmount');
+        const successModal = document.getElementById('successModal');
+        const confirmationText = document.getElementById('confirmationText');
+        let selectedPrice = 0;
+        let selectedCoins = 0;
+
+        document.querySelectorAll('.coin-card').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.coin-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+
+                if (card.id === 'customCard') {
+                    customInput.style.display = 'block';
+                    customInput.focus();
+                    selectedCoins = 0;
+                    selectedPrice = 0;
+                    totalAmount.textContent = '0.00';
+                    rechargeBtn.disabled = true;
+                } else {
+                    customInput.style.display = 'none';
+                    selectedCoins = parseInt(card.getAttribute('data-coin'));
+                    selectedPrice = parseFloat(card.getAttribute('data-price')).toFixed(2);
+                    totalAmount.textContent = selectedPrice;
+                    rechargeBtn.disabled = username.value.trim() === '';
+                }
+            });
+        });
+
+        customInput.addEventListener('input', () => {
+            const value = parseInt(customInput.value);
+            if (value > 0) {
+                selectedCoins = value;
+                selectedPrice = (value * 0.0102).toFixed(2); // approx. $0.0102 per coin
+                totalAmount.textContent = selectedPrice;
+                rechargeBtn.disabled = username.value.trim() === '';
+            } else {
+                selectedPrice = 0;
+                totalAmount.textContent = '0.00';
+                rechargeBtn.disabled = true;
+            }
+        });
+
+        username.addEventListener('input', () => {
+            rechargeBtn.disabled = selectedCoins === 0 || username.value.trim() === '';
+        });
+
+        rechargeBtn.addEventListener('click', () => {
+            confirmationText.textContent = `@${username.value.trim()} recharged with ${selectedCoins} coins ($${selectedPrice})`;
+            successModal.style.display = 'flex';
+        });
+
+        function closeModal() {
+            successModal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
